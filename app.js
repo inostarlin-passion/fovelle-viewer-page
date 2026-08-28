@@ -227,7 +227,6 @@
       "<article class=\"release-entry" + (isInitial ? " release-entry--initial" : "") + "\">" +
         "<div class=\"release-meta\"><span class=\"release-version\">v" + version + "</span><time class=\"release-date\" datetime=\"" + escapeHtml(release.date) + "\">" + date + "</time></div>" +
         "<div class=\"release-content\"><h2>Release notes</h2>" + changeMarkup + "</div>" +
-        "<div class=\"release-marker\" aria-hidden=\"true\"><span>↗</span></div>" +
       "</article>"
     );
   }
