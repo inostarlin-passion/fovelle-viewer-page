@@ -356,10 +356,14 @@ h2 em {
   font-size: 1rem;
 }
 
-.download-status,
-.system-note {
+.download-status {
   margin-bottom: 0;
   font-size: 0.71rem;
+}
+
+.system-note {
+  margin-bottom: 0;
+  font-size: 0.80rem;
 }
 
 .download-status {

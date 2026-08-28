@@ -1,82 +1,88 @@
-# `changelog.html` 删除方案的数学证明
+# Fovelle 首页文案与字号调整的数学证明
 
-## 1. 前提
+## 1. 前提与方案
 
-沿用 [数学模型](./model.md) 中的记号，并明确以下前提：
+沿用 [数学模型](./model.md) 的记号。验证驱动方案 `T` 只做两类有界修改：
 
-1. `H_s` 和 `H_p` 的 DOM 树在修改前同构，且每棵树恰有一个节点满足
-   `P(v) := tag(v)=section ∧ changelog-hero ∈ class(v)`。
-2. 截图所指内容完整包含在该节点 `t` 的子树内；截图之外的 release 列表、底部 CTA 和页脚位于 `t` 的兄弟节点或后续节点中。
-3. 实现只对 `t` 的父节点子节点序列执行一次删除，不对其他节点做重排、属性修改或文本替换。
-4. 页面脚本通过 `#release-list` 初始化 release 列表；该节点不在 `t` 子树中。
-5. 删除后仍保留原始 `<!doctype html>`、`html`、`head`、`body`、`main` 和 `footer` 节点及其闭合标签。
+1. 在唯一 `.hero-copy` 段落中加入 `open-source` 和 `free` 的可读文本；
+2. 将 `.download-status, .system-note` 的共享字号声明拆开，使 `.system-note` 从 `0.71rem` 变为 `0.80rem`，而 `.download-status` 继续为 `0.71rem`。
+
+相同的 `T` 应用于 `index.html`/`styles.css` 与 `public/index.html`/`public/styles.css`。实施前已确证两份 HTML 与两份 CSS 相同，且目标节点均唯一。
 
 ## 2. 定理
 
-设 `R(D)=remove(D,t)`，并将同一变换分别应用于 `D_s`、`D_p`。则输出满足任务要求：
+设 `O=T(I)`。若实现严格遵守模型中的三个原子操作，且 CSS 级联、HTML 解析和构建验证通过，则：
 
 \[
-R(D)\models
-\{
-\text{目标移除},
-\text{非目标保留},
-\text{结构有效},
-\text{脚本可运行},
-\text{副本一致}
-\}.
+O\models
+\{P_{copy},P_{size},P_{scope},P_{mirror},P_{behavior},P_{structure}\}
 \]
 
-## 3. 引理一：目标节点及其内容被完整移除
+即输出同时满足文案、字号、变更范围、镜像一致性、页面行为和结构有效性要求。
 
-由前提 1，`t` 是唯一满足 `P` 的节点。`remove(D,t)` 将 `t` 从其父节点的子节点序列中删除，并连同 `t` 的全部后代一起从可达 DOM 中移除。因此：
+## 3. 引理一：文案包含开源与免费声明
+
+由模型的初始事实，`.hero-copy` 存在且唯一。方案在该节点的文本中执行一次确定性替换，并且替换结果显式包含字符串 `open-source` 与 `free`，不删除 `<p class="hero-copy">` 标签。
+
+因此：
 
 \[
-count(R(D),P)=0
+\texttt{open-source}\subseteq text(h')\land\texttt{free}\subseteq text(h')
 \]
 
-且 `text(t)` 中的所有内容均不再属于输出文档。由于截图目标的返回链接、`Release history`、主标题和说明文字均在 `t` 子树中，由前提 2，截图所指内容全部消失；不会留下只显示半个 hero 的残片。
+所以 `P_copy(O)` 成立。由于文本仍属于原 `<p>` 节点，HTML 语义和辅助技术可读取的文档文本保持在 DOM 中；不会因把文案放到 CSS 伪元素而丢失。
 
-## 4. 引理二：非目标页面结构保持不变
+## 4. 引理二：两个指定行的字号严格增大
 
-设 `C=children(parent(t))`，删除位置为 `k`。定义：
+模型中 `N(D)` 恰包含系统要求行和语言支持行两个节点，且这两个节点都匹配 `.system-note`。新规则对 `.system-note` 的声明为 `0.80rem`，旧规则为 `0.71rem`。对任意根字号 `r>0`：
 
 \[
-C' = C[0:k]\;||\;C[k+1:|C|]
+0.80r-0.71r=0.09r>0
 \]
 
-其中 `||` 是序列拼接。除 `t` 外，`C` 中每个节点都以原对象、原属性和原后代出现在 `C'` 中，且相互相对顺序不变。递归地，`t` 之外所有节点的子节点序列也不变。
-
-由前提 2，`section.releases-section`、`#release-list`、`section.changelog-footer-cta` 和 `footer.site-footer` 都不在 `t` 子树中，所以它们仍各出现一次，且顺序不变。页面脚本、样式引用和 YAML 数据文件也没有被修改。
-
-## 5. 引理三：HTML 结构仍然有效
-
-目标是一个完整的 `<section>...</section>` 子树。删除操作同时移除其起始标签、内容和结束标签，不会产生孤立标签。根据前提 5，文档根结构和其他标签仍完整闭合；因此 `R(D)` 仍是可解析的 HTML 文档。
-
-此外，目标所在位置是 `<main>` 允许出现流内容的位置。删除一个完整流内容节点只减少父节点的子节点数量，不会改变剩余节点的合法父子关系。
-
-## 6. 引理四：release 动态行为保持可达
-
-脚本所需节点为 `#release-list`。由引理二，该节点在输出文档中仍存在且唯一。因此脚本执行：
+故每个 `v\in N(D)` 均有：
 
 \[
-querySelector(\#release-list)\neq null
+size_{C'}(v,R)=0.80r>0.71r=size_C(v,R)
 \]
 
-仍成立；其后对 `changelog.yaml` 的读取、release 列表填充以及 loading 状态切换所依赖的节点也未被目标删除。故删除 hero 不会阻断 release 区域的动态行为。
+所以 `P_size(O,I)` 成立。两者都使用 `rem`，依据 [MDN `font-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-size) 和 [WAI C14](https://www.w3.org/WAI/WCAG21/Techniques/css/C14)，该增大保留相对于根字号的缩放关系，而非把文字锁死为不可随用户设置变化的像素值。
 
-## 7. 引理五：两个静态副本保持一致
+## 5. 引理三：无关下载状态字号不变
 
-初始时 `H_s=H_p`，且两份文件中目标节点及其上下文相同。对相同字符串执行相同的确定性变换 `remove`，得到：
+方案把原共享声明拆分为两个互斥选择器声明：`.download-status` 的值仍为 `0.71rem`，`.system-note` 的值为 `0.80rem`。由于 `d` 匹配 `.download-status` 而不匹配 `.system-note`，CSS 级联给出：
 
 \[
-H'_s=serialize(remove(parse(H_s),t_s))
-=serialize(remove(parse(H_p),t_p))=H'_p
+size_{C'}(d,R)=0.71r=size_C(d,R)
 \]
 
-因此修改后的根文件与 `public` 副本字节级一致。
+因此 `P_scope` 成立，任务范围不会因共享选择器而意外放大。
 
-## 8. 结论
+## 6. 引理四：结构、换行和可访问文本保持有效
 
-引理一给出截图内容的精确消除；引理二保证 release 页面其余内容和范围外文件不变；引理三保证文档可解析；引理四保证动态 release 加载仍可运行；引理五保证实际静态副本一致。由合取引入，定理成立。
+方案不改变两个 `p.system-note` 的节点、顺序、文本节点类型或父节点，只改变其继承的 `font-size`。`.system-note` 没有固定高度，且语言支持文本仍在原段落内，因此字号变大时浏览器可以通过正常行盒和自然换行容纳文本；不会产生因截断或删除文字造成的语义损失。
 
-最终仍需通过静态解析、文本/结构断言、脚本 lint/build 和浏览器加载测试检查上述前提在实际文件中的实例化结果。
+`.hero-copy` 仍是原有段落，只增加普通文本。根据 [WHATWG HTML 的段落模型](https://html.spec.whatwg.org/dev/dom.html#paragraphs)，该结构仍为合法的文本段落。方案也不触及 `#download-button`、`[data-carousel]`、`#release-list` 或脚本标签，所以这些行为所需的 DOM 锚点仍可达。
+
+因此 `P_structure` 和 `P_behavior` 的静态部分成立；其运行时部分由后续 HTTP/build 动态检查确认。
+
+## 7. 引理五：两份静态副本保持一致
+
+设修改前 `D_r=D_p`（字节级相等）。对两份文件应用同一个确定性替换 `T`，且替换目标和上下文均唯一。因此：
+
+\[
+T(D_r)=T(D_p)
+\]
+
+同理，若 `C_r=C_p`，则 `T(C_r)=T(C_p)`。于是 `P_mirror` 成立：根目录和 `public/` 的部署副本不会出现一份更新、一份旧内容的状态。
+
+## 8. 结论与验证义务
+
+由引理一和二，用户可见的两类需求直接满足；由引理三，未请求的下载状态没有被放大；由引理四，HTML 结构、语义文本、自然换行和脚本锚点保持；由引理五，实际发布副本一致。合取引入得出定理。
+
+剩余的实现义务是检验前提的实际实例化：
+
+1. 静态检查目标文本、规则数值、两份副本相等以及非目标节点存在；
+2. 运行 lint/build，证明源码可解析并生成部署产物；
+3. 启动本地开发服务器并以 HTTP 请求验证首页成功返回且含新文案；
+4. 若任何判定失败，按模型状态机回退到对应设计或实现步骤。

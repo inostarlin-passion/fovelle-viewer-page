@@ -1,98 +1,146 @@
-# `changelog.html` 删除任务的数学模型
+# Fovelle 首页文案与字号调整的数学模型
 
 ## 1. 范围与已确证前提
 
-- 用户提供的截图对应页面顶部的 changelog hero：返回链接、`Release history` 标签、`Small changes. Better looking.` 标题以及说明文字。
-- `changelog.html` 与 `public/changelog.html` 当前字节级相同；两者都属于仓库的静态页面副本，因此把它们建模为同一页面的两个发布表示。
-- 页面中该内容由唯一的 `<section class="changelog-hero" ...>` 包含。其后的 release 列表、底部 CTA 和页脚不属于截图目标。
-- HTML 标准将 `<section>` 定义为带主题的文档分组，通常包含标题；MDN 还规定 `<section>` 的起止标签不能省略。因此删除目标时以完整元素子树为单位，而不是删除若干文本节点或用 CSS 隐藏。
+本任务只处理首页 hero 区域的三项可观察属性：说明文案、系统要求行和语言支持行。仓库中存在两份字节级相同的静态首页：根目录的 `index.html` 和部署用的 `public/index.html`；两份页面都引用对应位置的 `styles.css`，且根目录与 `public/` 中的样式表在修改前相同。因此，为保证开发源文件和部署产物一致，将两份副本作为同一逻辑页面的两个表示同步修改。
 
-规范依据：
+本地检查得到以下初始事实：
 
-- [WHATWG HTML Standard — The `section` element](https://html.spec.whatwg.org/dev/sections.html)
-- [MDN — `<section>`: The generic Section element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/section)
+1. `.hero-copy` 恰有一个段落，文本以 `Fovelle is a lightweight image viewer` 开头。
+2. 下载区恰有两个 `p.system-note`：`Requires macOS 15.0 or later` 和 `Available in...` 语言支持行。
+3. 两个系统说明通过 `.system-note` 选择器继承同一个 `font-size: 0.71rem`；`.download-status` 也共享该选择器组，但不是本任务的目标。
+4. `.system-note` 没有固定高度，语言行允许自然换行；因此增大字号可能改变换行，但不应通过裁剪文本来满足需求。
 
-## 2. 对象定义
+联网多跳检索得到的外部前提：
 
-令一个 HTML 文档表示为有序带标签树：
+- Fovelle 的公开 GitHub 仓库 README 将其描述为面向 macOS 的轻量图像查看器，并列出 `macOS 15.0 or later` 的系统要求：[Fovelle README](https://github.com/inostarlin-passion/Fovelle#readme)。
+- 同一公开仓库包含 GPLv3 `LICENSE`；该许可证说明其授予运行、修改和传播软件的权利，并使用 “free software” 的术语：[Fovelle LICENSE](https://raw.githubusercontent.com/inostarlin-passion/Fovelle/main/LICENSE)。这支持在产品文案中称其为开源/自由软件。**“免费”作为本任务要求的产品文案断言处理，不把 GPL 的自由软件含义误当成价格保证。**
+- MDN 说明 `font-size` 的 `rem` 值相对于根 `html` 字号计算，并建议使用相对用户默认字号的值以提高可访问性：[MDN `font-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-size)。W3C WAI 的 C14 技术说明也把相对字号与用户缩放能力联系起来：[WAI C14](https://www.w3.org/WAI/WCAG21/Techniques/css/C14)。
+- HTML 标准把文本作为 phrasing content，并将段落作为文本运行组织单位：[WHATWG DOM — paragraphs](https://html.spec.whatwg.org/dev/dom.html#paragraphs)。因此保持文案位于原有 `<p>` 中，不以 CSS 生成文本。
+
+## 2. 对象、输入与输出
+
+把一个页面表示为
 
 \[
-D=(V,E,r,\operatorname{tag},\operatorname{attr},\operatorname{children},\operatorname{text})
+D=(H,C,J,A,R)
 \]
 
 其中：
 
-- `V` 是 DOM 节点集合，`r` 是根节点；
-- `E` 是父子关系；
-- `tag(v)` 是节点标签名；
-- `attr(v)` 是属性映射；
-- `children(v)` 是保持文档顺序的子节点序列；
-- `text(v)` 是节点及其后代产生的文本内容。
+- `H` 是 HTML DOM 树；
+- `C` 是 CSS 规则集合及其选择器匹配关系；
+- `J` 是页面脚本及其加载行为；
+- `A` 是本地静态资源映射；
+- `R` 是浏览器根字号与视口等渲染环境。
 
-输入定义为：
-
-\[
-I=(H_s,H_p,S)
-\]
-
-- `H_s`：仓库根目录的 `changelog.html`；
-- `H_p`：`public/changelog.html`；
-- `S`：用户提供的截图及其对目标区域的语义指示。
-
-解析后分别得到 `D_s=parse(H_s)` 与 `D_p=parse(H_p)`。已知初始镜像关系为：
+输入为
 
 \[
-H_s=H_p \quad\Longrightarrow\quad D_s\cong D_p
+I=(D_r,D_p,U)
 \]
 
-这里的 `\cong` 表示节点、属性和文本在对应位置相同。
+其中 `D_r` 是根目录首页，`D_p` 是 `public/` 首页，`U` 是用户要求：
 
-## 3. 目标谓词与变换
+1. 两个指定系统说明行的字号适当增大；
+2. `.hero-copy` 在保持原有轻量图像查看器语义的同时，明确包含“开源”和“免费”；
+3. 不破坏页面结构、下载行为、轮播行为或响应式换行。
 
-定义目标节点谓词：
+输出为
 
 \[
-P(v) := \operatorname{tag}(v)=\texttt{section}
-\land \texttt{changelog-hero}\in\operatorname{class}(v)
+O=(D'_r,D'_p)
 \]
 
-令：
+并要求根目录与 `public/` 副本保持字节级一致。
+
+## 3. 形式化目标谓词
+
+令 `class(v)` 表示元素节点 `v` 的 class 集合，`text(v)` 表示其后代文本串。定义目标集合：
 
 \[
-T(D)=\{v\in V\mid P(v)\}
+N(D)=\{v\mid v\text{ 是 }p\text{ 元素}\land\texttt{system-note}\in class(v)\}
 \]
 
-仓库检查得到 `|T(D_s)|=|T(D_p)|=1`。令 `t_s`、`t_p` 分别为两个文档中的唯一目标节点。
-
-定义结构变换 `remove(D,t)`：从 `t` 的父节点子节点序列中删除 `t`，保持其余节点及其相对顺序、属性、文本和事件引用不变；不删除 `t` 之外的祖先、兄弟或后代。
-
-所选实现的输出为：
+初始检查给出 `|N(D_r)|=|N(D_p)|=2`。令 `n_1` 为系统要求行，`n_2` 为语言支持行；按页面顺序：
 
 \[
-H'_s=\operatorname{serialize}(remove(D_s,t_s)),
-\qquad
-H'_p=\operatorname{serialize}(remove(D_p,t_p))
+text(n_1)=\text{“Requires macOS 15.0 or later”}
 \]
 
-同时生成本模型文件 `reports/model.md` 与证明文件 `reports/proof.md`。
+\[
+text(n_2)\text{ 以“Available in”开头}
+\]
 
-## 4. 行为与约束
+定义 hero 文案节点 `h`：
 
-实现必须满足以下约束：
+\[
+h=\operatorname{唯一节点}\{v\mid \texttt{hero-copy}\in class(v)\}
+\]
 
-1. **精确性**：删除完整 `.changelog-hero` 节点，不能只删除其中部分文案，也不能误删 `.releases-section` 或 `.changelog-footer-cta`。
-2. **保留性**：`main`、`section.releases-section`、`#release-list`、`section.changelog-footer-cta`、`footer.site-footer` 及页面脚本引用继续存在。
-3. **镜像一致性**：修改后 `changelog.html` 与 `public/changelog.html` 保持字节级一致。
-4. **文档有效性**：输出仍是完整的 HTML 文档，`html`、`head`、`body`、`main` 和 `footer` 的嵌套闭合不被破坏。
-5. **范围最小化**：不修改与目标无关的 CSS、JavaScript、YAML、图片或其他页面。
-6. **渲染行为**：页面加载后截图目标中的文本和布局块不应出现；release 数据加载脚本仍可找到 `#release-list` 并运行。
+定义文案谓词：
 
-## 5. 待验证性质
+\[
+P_{copy}(D):=\texttt{open-source}\subseteq text(h)\land\texttt{free}\subseteq text(h)
+\]
 
-对输出文档 `D'` 验证：
+定义字号函数 `size_C(v,R)` 为在渲染环境 `R` 下由 CSS 级联得到的计算字号。令 `r` 为 `html` 的计算字号，旧规则与新规则分别为：
 
-- `count(D', P)=0`；
-- `#release-list`、`.releases-section`、`.changelog-footer-cta` 与 `.site-footer` 各出现一次；
-- 目标节点删除前后的非目标节点序列相等；
-- 两份输出文件内容相等；
-- 静态 HTML 结构和动态页面加载均无错误。
+\[
+s_0=0.71r,\qquad s_1=0.80r
+\]
+
+故
+
+\[
+s_1>s_0,\qquad \frac{s_1}{s_0}=\frac{0.80}{0.71}\approx1.1268
+\]
+
+定义字号谓词：
+
+\[
+P_{size}(D',D):=\forall v\in N(D),\ size_{C'}(v,R)>size_C(v,R)
+\]
+
+同时要求 `.download-status` 的字号保持原值，以避免共享选择器造成无关变化：
+
+\[
+P_{scope}: size_{C'}(d,R)=size_C(d,R)
+\]
+
+其中 `d` 是 `.download-status` 唯一节点。
+
+## 4. 变换、状态与行为
+
+将一次确定性变换 `T` 定义为以下三个原子操作，并对根目录和 `public/` 副本分别执行相同操作：
+
+1. 在唯一 `h` 的文本节点中，将 “Fovelle is a lightweight image viewer designed...” 改为含有 `open-source` 与 `free` 的完整句子，保留其 `<p class="hero-copy">` 结构。
+2. 将共享字号规则拆为独立规则：`.download-status { font-size: 0.71rem; }` 与 `.system-note { font-size: 0.80rem; }`；保留 `.system-note` 原有 margin、颜色和选择器语义。
+3. 不改动其余 HTML 节点、脚本、资源引用、页面顺序和非目标 CSS 声明。
+
+页面状态用离散状态机表示：
+
+\[
+S_0\xrightarrow{\text{建模}}S_1\xrightarrow{\text{证明}}S_2\xrightarrow{\text{实现}}S_3\xrightarrow{\text{验证}}S_4
+\]
+
+- `S_0`：现有页面，`P_copy` 与 `P_size` 尚未满足；
+- `S_1`：模型和前提写入 `reports/model.md`；
+- `S_2`：证明写入 `reports/proof.md`，选定变换 `T`；
+- `S_3`：源文件已实施 `T`；
+- `S_4`：静态、构建、HTTP 动态检查均通过。
+
+若任一验证谓词失败，则按失败来源回退：文案失败回到 `S_2` 修正 `T`，级联/布局失败回到字号规则设计，镜像或构建失败回到实现步骤；未通过前不得宣称完成。
+
+## 5. 约束与验收性质
+
+输出必须满足：
+
+1. `P_copy(O)` 成立，且文案仍是一个语义 `<p>`，不使用 CSS `content` 伪造可见文字。
+2. `|N(D'_r)|=|N(D'_p)|=2`，并且每个节点字号从 `0.71rem` 提升到 `0.80rem`。
+3. `.download-status` 仍为 `0.71rem`；除目标文案、目标字号规则和必要的镜像同步外，不发生无关文件变化。
+4. `D'_r` 与 `D'_p` 的 HTML 内容相等，根目录与 `public/` 的 CSS 内容相等。
+5. HTML 能被构建工具解析，`app.js` 语法检查通过；下载链接初始化、轮播初始化和动态 changelog 初始化所需的节点继续存在。
+6. 在至少一个真实 HTTP 页面请求中，首页返回成功状态并包含新文案；构建产物生成成功。
+
+这些性质构成后续证明和代码验证的判定标准。
