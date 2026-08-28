@@ -41,7 +41,6 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
   overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
@@ -89,7 +88,7 @@ button {
 .page-orb {
   position: absolute;
   z-index: -1;
-  width: 28rem;
+  width: min(28rem, 100%);
   height: 28rem;
   pointer-events: none;
   border-radius: 999px;
@@ -99,14 +98,14 @@ button {
 
 .page-orb--top {
   top: 4rem;
-  right: -12rem;
-  background: radial-gradient(circle, rgba(62, 155, 255, 0.36), transparent 68%);
+  right: 0;
+  background: radial-gradient(circle at 100% 50%, rgba(62, 155, 255, 0.36), transparent 68%);
 }
 
 .page-orb--bottom {
   top: 52rem;
-  left: -16rem;
-  background: radial-gradient(circle, rgba(196, 215, 255, 0.45), transparent 68%);
+  left: 0;
+  background: radial-gradient(circle at 0 50%, rgba(196, 215, 255, 0.45), transparent 68%);
 }
 
 .container {
