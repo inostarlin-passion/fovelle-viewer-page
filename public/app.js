@@ -94,6 +94,7 @@
   function initDownload() {
     var button = document.querySelector("#download-button");
     if (!button) return;
+    var status = document.querySelector("[data-download-status]");
 
     loadText("download_link.yaml")
       .then(function (source) {
@@ -107,8 +108,7 @@
         button.classList.remove("is-loading", "is-disabled");
         var version = document.querySelector("[data-download-version]");
         if (version && config.version) version.textContent = "v" + config.version;
-        var status = document.querySelector("[data-download-status]");
-        if (status) status.textContent = "Universal build · ready to download";
+        if (status) status.hidden = true;
       })
       .catch(function () {
         button.setAttribute("aria-disabled", "true");
@@ -117,8 +117,10 @@
         button.classList.add("is-disabled");
         var label = button.querySelector(".button-label");
         if (label) label.textContent = "Download unavailable";
-        var status = document.querySelector("[data-download-status]");
-        if (status) status.textContent = "The download link could not be loaded";
+        if (status) {
+          status.textContent = "The download link could not be loaded";
+          status.hidden = false;
+        }
       });
 
     button.addEventListener("click", function (event) {
