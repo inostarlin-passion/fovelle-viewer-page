@@ -1,0 +1,9 @@
+releases:
+  - version: "1.0.1"
+    date: "2026-08-27"
+    changes:
+      - "Refined the Settings UI."
+      - "Removed some settings for a more focused experience."
+  - version: "1.0.0"
+    date: "2026-08-27"
+    changes: []

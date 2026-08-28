@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f4f1" />
+    <meta
+      name="description"
+      content="Fovelle is a fast, minimal image viewer made for macOS."
+    />
+    <meta property="og:title" content="Fovelle — A quiet place for your images" />
+    <meta
+      property="og:description"
+      content="A lightweight macOS image viewer for RAW, HDR, vector, and everyday images."
+    />
+    <meta property="og:image" content="assets/fovelle-icon.png" />
+    <title>Fovelle — A quiet place for your images</title>
+    <link rel="icon" type="image/png" href="assets/fovelle-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body class="site-shell">
+    <div class="page-orb page-orb--top" aria-hidden="true"></div>
+    <div class="page-orb page-orb--bottom" aria-hidden="true"></div>
+
+    <header class="site-nav container">
+      <a class="brand" href="index.html" aria-label="Fovelle home">
+        <span class="brand-mark">
+          <img src="assets/fovelle-icon.png" alt="" />
+        </span>
+        <span class="brand-name">Fovelle</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="nav-link" href="changelog.html">Changelog</a>
+        <a
+          class="nav-link nav-link--github"
+          href="https://github.com/inostarlin-passion/Fovelle"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero-copy-block">
+          <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Native image viewing for macOS</p>
+          <h1 id="hero-title">See every image<br /><em>in its best light.</em></h1>
+          <p class="hero-copy">
+            Fovelle is a lightweight image viewer designed to stay fast, minimal,
+            and quietly out of the way while you work.
+          </p>
+
+          <div class="download-cluster">
+            <a
+              id="download-button"
+              class="button button--primary is-loading"
+              href="#"
+              aria-disabled="true"
+              aria-busy="true"
+            >
+              <span class="button-label">Download Fovelle</span>
+              <span class="button-version" data-download-version>Loading…</span>
+              <span class="button-arrow" aria-hidden="true">↓</span>
+            </a>
+            <p class="download-status" data-download-status>Preparing the latest macOS build</p>
+            <p class="system-note">Requires macOS 15.0 or later</p>
+          </div>
+        </div>
+
+        <aside class="hero-aside" aria-label="Product positioning">
+          <span class="aside-index">01 / 04</span>
+          <p class="aside-label">Made for</p>
+          <p class="aside-value">Quiet work<br />with visual files.</p>
+          <span class="aside-rule" aria-hidden="true"></span>
+          <p class="aside-footnote">No noise. No heavy editor chrome.</p>
+        </aside>
+      </section>
+
+      <section class="showcase-wrap container" aria-labelledby="showcase-title">
+        <div class="section-heading section-heading--showcase">
+          <div>
+            <p class="eyebrow eyebrow--light">The view</p>
+            <h2 id="showcase-title">The essentials,<br /><em>beautifully handled.</em></h2>
+          </div>
+          <p class="section-intro section-intro--light">
+            A native-feeling canvas for everything from a quick preview to a
+            deep look at a high-resolution image.
+          </p>
+        </div>
+
+        <div class="carousel" data-carousel>
+          <div class="carousel-topline">
+            <span>Fovelle in motion</span>
+            <span class="carousel-status" data-carousel-status aria-live="polite">01 / 02</span>
+          </div>
+
+          <div class="carousel-viewport" tabindex="0" aria-label="Product screenshot carousel">
+            <figure class="carousel-slide is-active" data-slide="0">
+              <img
+                src="assets/snapshot1.jpg"
+                alt="Fovelle displaying an image in light appearance with its settings panel open"
+              />
+              <figcaption>
+                <span>01</span>
+                <strong>Light appearance</strong>
+                <span>Clean by default</span>
+              </figcaption>
+            </figure>
+            <figure class="carousel-slide" data-slide="1" aria-hidden="true">
+              <img
+                src="assets/snapshot2.jpg"
+                alt="Fovelle displaying an image in dark appearance with its settings panel open"
+              />
+              <figcaption>
+                <span>02</span>
+                <strong>Dark appearance</strong>
+                <span>Easy on the eyes</span>
+              </figcaption>
+            </figure>
+
+            <button class="carousel-control carousel-control--prev" type="button" data-carousel-prev aria-label="Previous screenshot">←</button>
+            <button class="carousel-control carousel-control--next" type="button" data-carousel-next aria-label="Next screenshot">→</button>
+          </div>
+
+          <div class="carousel-footer">
+            <div class="carousel-dots" role="tablist" aria-label="Choose screenshot">
+              <button class="carousel-dot is-active" type="button" role="tab" data-carousel-dot="0" aria-label="Show light appearance" aria-selected="true"></button>
+              <button class="carousel-dot" type="button" role="tab" data-carousel-dot="1" aria-label="Show dark appearance" aria-selected="false"></button>
+            </div>
+            <span class="carousel-hint">Use the dots or arrow keys to explore</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-section container" id="features" aria-labelledby="feature-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">The quiet advantage</p>
+            <h2 id="feature-title">All signal.<br /><em>Nothing extra.</em></h2>
+          </div>
+          <p class="section-intro">
+            Fovelle gives your images the full frame — with the speed, control,
+            and format support to keep up with the work around them.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card feature-card--wide">
+            <div class="feature-number">01</div>
+            <div class="feature-card-body">
+              <span class="feature-symbol feature-symbol--pulse" aria-hidden="true"><i></i><i></i><i></i></span>
+              <h3>Open fast,<br />keep moving.</h3>
+              <p>Fast cold-start loading and preloading make folder-by-folder browsing feel immediate.</p>
+              <span class="feature-tag">Fast navigation</span>
+            </div>
+          </article>
+
+          <article class="feature-card feature-card--blue">
+            <div class="feature-number">02</div>
+            <div class="feature-card-body">
+              <span class="feature-symbol feature-symbol--aperture" aria-hidden="true"><i></i></span>
+              <h3>See more<br />detail.</h3>
+              <p>RAW, HDR, EPS, and SVG support — with smooth zooming up to 6400%.</p>
+              <span class="feature-tag">Rich formats</span>
+            </div>
+          </article>
+
+          <article class="feature-card feature-card--dark">
+            <div class="feature-number">03</div>
+            <div class="feature-card-body">
+              <span class="feature-symbol feature-symbol--keys" aria-hidden="true">⌘</span>
+              <h3>Your flow,<br />your shortcuts.</h3>
+              <p>Custom keyboard and mouse shortcuts, system appearance, and controls that stay out of sight until needed.</p>
+              <span class="feature-tag">Your rhythm</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="formats-section container" aria-labelledby="formats-title">
+        <div class="formats-card">
+          <div class="formats-copy">
+            <p class="eyebrow">A broad canvas</p>
+            <h2 id="formats-title">Bring the whole<br /><em>library with you.</em></h2>
+            <p>
+              From familiar exports to specialist formats, Fovelle is ready for
+              the files you actually encounter.
+            </p>
+          </div>
+          <div class="format-cloud" aria-label="Supported format highlights">
+            <span class="format-chip format-chip--accent">RAW</span>
+            <span class="format-chip">HDR</span>
+            <span class="format-chip">EPS</span>
+            <span class="format-chip format-chip--large">SVG</span>
+            <span class="format-chip">JPEG XL</span>
+            <span class="format-chip">HEIF</span>
+            <span class="format-chip">AVIF</span>
+            <span class="format-chip">OpenEXR</span>
+            <span class="format-chip">GIF</span>
+            <span class="format-chip">PSD</span>
+            <span class="format-chip format-chip--soft">TIFF</span>
+            <span class="format-chip format-chip--soft">WebP</span>
+            <span class="format-more">and many more</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing-section container" aria-labelledby="closing-title">
+        <div class="closing-mark" aria-hidden="true"><img src="assets/fovelle-icon.png" alt="" /></div>
+        <p class="eyebrow">Make space for the image</p>
+        <h2 id="closing-title">A clearer way<br /><em>to look.</em></h2>
+        <p class="closing-copy">Download Fovelle and keep your visual work moving at the speed of thought.</p>
+        <a class="text-cta" href="#download-button">Get Fovelle <span aria-hidden="true">↓</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer container">
+      <div class="footer-brand">
+        <span class="brand-mark brand-mark--small"><img src="assets/fovelle-icon.png" alt="" /></span>
+        <span>Fovelle</span>
+      </div>
+      <p>Fast, minimal image viewing for macOS.</p>
+      <div class="footer-links">
+        <a href="changelog.html">Changelog</a>
+        <a href="https://github.com/inostarlin-passion/Fovelle" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
+    </footer>
+  </body>
+</html>
