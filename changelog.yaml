@@ -1,4 +1,9 @@
 releases:
+  - version: "1.0.2"
+    date: "2026-08-28"
+    changes:
+      - "Improved NEF image loading performance."
+      - "Eliminated blurriness and jagged edges when dragging EPS or SVG images."
   - version: "1.0.1"
     date: "2026-08-27"
     changes:
