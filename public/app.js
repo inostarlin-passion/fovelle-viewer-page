@@ -242,7 +242,7 @@
     if (!value) return false;
     try {
       var url = new URL(value, window.location.href);
-      return url.protocol === "https:" || url.protocol === "http:";
+      return url.protocol === "https:";
     } catch {
       return false;
     }
