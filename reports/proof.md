@@ -1,88 +1,96 @@
-# Fovelle 首页文案与字号调整的数学证明
+# 截图资源替换的数学证明
 
-## 1. 前提与方案
+## 1. 定理与前提
 
-沿用 [数学模型](./model.md) 的记号。验证驱动方案 `T` 只做两类有界修改：
+沿用 [数学模型](./model.md) 的记号。设根目录和 `public/` 中的首页在修改前满足
+`D_r = D_p`，且两个页面各自存在唯一的 `q_L`、`q_D`。设本地检查已经确认
+`u_L`、`u_D` 存在并是 AVIF 文件。对两份首页分别执行同一个确定性变换 `T`。
 
-1. 在唯一 `.hero-copy` 段落中加入 `open-source` 和 `free` 的可读文本；
-2. 将 `.download-status, .system-note` 的共享字号声明拆开，使 `.system-note` 从 `0.71rem` 变为 `0.80rem`，而 `.download-status` 继续为 `0.71rem`。
-
-相同的 `T` 应用于 `index.html`/`styles.css` 与 `public/index.html`/`public/styles.css`。实施前已确证两份 HTML 与两份 CSS 相同，且目标节点均唯一。
-
-## 2. 定理
-
-设 `O=T(I)`。若实现严格遵守模型中的三个原子操作，且 CSS 级联、HTML 解析和构建验证通过，则：
+要证明：
 
 \[
-O\models
-\{P_{copy},P_{size},P_{scope},P_{mirror},P_{behavior},P_{structure}\}
+O\models P_{exact}\land P_{avif}\land P_{structure}\land P_{behavior}
+\land P_{mirror}\land P_{scope}
 \]
 
-即输出同时满足文案、字号、变更范围、镜像一致性、页面行为和结构有效性要求。
+若代码检查、构建和动态检查通过，则再得到 `P_build`。
 
-## 3. 引理一：文案包含开源与免费声明
+## 2. 引理一：浅色和深色路径精确满足要求
 
-由模型的初始事实，`.hero-copy` 存在且唯一。方案在该节点的文本中执行一次确定性替换，并且替换结果显式包含字符串 `open-source` 与 `free`，不删除 `<p class="hero-copy">` 标签。
-
-因此：
+由变换 `T` 的定义，唯一的浅色目标节点被赋值
 
 \[
-\texttt{open-source}\subseteq text(h')\land\texttt{free}\subseteq text(h')
+src(q_L(D'_r))=u_L=\texttt{/Users/inostarlin/Downloads/1.avif}
 \]
 
-所以 `P_copy(O)` 成立。由于文本仍属于原 `<p>` 节点，HTML 语义和辅助技术可读取的文档文本保持在 DOM 中；不会因把文案放到 CSS 伪元素而丢失。
-
-## 4. 引理二：两个指定行的字号严格增大
-
-模型中 `N(D)` 恰包含系统要求行和语言支持行两个节点，且这两个节点都匹配 `.system-note`。新规则对 `.system-note` 的声明为 `0.80rem`，旧规则为 `0.71rem`。对任意根字号 `r>0`：
+唯一的深色目标节点被赋值
 
 \[
-0.80r-0.71r=0.09r>0
+src(q_D(D'_r))=u_D=\texttt{/Users/inostarlin/Downloads/2.avif}
 \]
 
-故每个 `v\in N(D)` 均有：
+`D'_p` 也执行同一赋值。因此两个页面副本均满足 `P_exact`。这不是根据文件扩展名推断的
+近似匹配，而是对 DOM 属性字符串的逐字符相等。
+
+## 3. 引理二：目标资源是可识别的 AVIF 图像
+
+本地 `file` 检查将两个输入文件均识别为 `ISO Media, AVIF Image`，故 `P_avif` 的文件存在性与
+格式部分成立。外部规范层面，[MDN AVIF 指南](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types#avif_image)
+将 AVIF 定义为图像文件格式，[MDN `<img>` 文档](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img)
+将 AVIF 列在图像元素可使用的格式中。因此把它们作为 `<img>` 的源在语义上是合法的图像资源选择。
+
+## 4. 引理三：轮播索引与新图像路径保持对应
+
+`app.js` 的 `setSlide(k)` 只根据索引切换 `is-active` 和 `aria-hidden`，没有重写任何 `src` 属性；
+前进、后退、圆点和左右箭头键最终都调用该函数。由模型中的图像选择函数：
 
 \[
-size_{C'}(v,R)=0.80r>0.71r=size_C(v,R)
+image(0,D'_r)=src(q_L(D'_r))=u_L
 \]
-
-所以 `P_size(O,I)` 成立。两者都使用 `rem`，依据 [MDN `font-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-size) 和 [WAI C14](https://www.w3.org/WAI/WCAG21/Techniques/css/C14)，该增大保留相对于根字号的缩放关系，而非把文字锁死为不可随用户设置变化的像素值。
-
-## 5. 引理三：无关下载状态字号不变
-
-方案把原共享声明拆分为两个互斥选择器声明：`.download-status` 的值仍为 `0.71rem`，`.system-note` 的值为 `0.80rem`。由于 `d` 匹配 `.download-status` 而不匹配 `.system-note`，CSS 级联给出：
 
 \[
-size_{C'}(d,R)=0.71r=size_C(d,R)
+image(1,D'_r)=src(q_D(D'_r))=u_D
 \]
 
-因此 `P_scope` 成立，任务范围不会因共享选择器而意外放大。
+所以初始浅色图、切换后的深色图以及反向切换都保留正确的一一对应关系。由于两个目标节点、
+`data-slide`、控制按钮和 `alt` 文本未被删除，轮播脚本所需的 DOM 前提保持成立，即
+`P_structure` 与 `P_behavior` 的结构部分成立。
 
-## 6. 引理四：结构、换行和可访问文本保持有效
+## 5. 引理四：两份发布表示一致
 
-方案不改变两个 `p.system-note` 的节点、顺序、文本节点类型或父节点，只改变其继承的 `font-size`。`.system-note` 没有固定高度，且语言支持文本仍在原段落内，因此字号变大时浏览器可以通过正常行盒和自然换行容纳文本；不会产生因截断或删除文字造成的语义损失。
-
-`.hero-copy` 仍是原有段落，只增加普通文本。根据 [WHATWG HTML 的段落模型](https://html.spec.whatwg.org/dev/dom.html#paragraphs)，该结构仍为合法的文本段落。方案也不触及 `#download-button`、`[data-carousel]`、`#release-list` 或脚本标签，所以这些行为所需的 DOM 锚点仍可达。
-
-因此 `P_structure` 和 `P_behavior` 的静态部分成立；其运行时部分由后续 HTTP/build 动态检查确认。
-
-## 7. 引理五：两份静态副本保持一致
-
-设修改前 `D_r=D_p`（字节级相等）。对两份文件应用同一个确定性替换 `T`，且替换目标和上下文均唯一。因此：
+已知修改前 `D_r=D_p`。对相同的上下文执行相同的确定性字符串替换，且每个目标上下文唯一，
+故函数相等性给出：
 
 \[
-T(D_r)=T(D_p)
+D'_r=T(D_r)=T(D_p)=D'_p
 \]
 
-同理，若 `C_r=C_p`，则 `T(C_r)=T(C_p)`。于是 `P_mirror` 成立：根目录和 `public/` 的部署副本不会出现一份更新、一份旧内容的状态。
+因此 `P_mirror` 成立。同步 `public/index.html` 是必要的，因为 `app/page.tsx` 将首页路由导向
+`/index.html`，运行时不能只依赖根目录副本。
 
-## 8. 结论与验证义务
+## 6. 引理五：变更范围是封闭的
 
-由引理一和二，用户可见的两类需求直接满足；由引理三，未请求的下载状态没有被放大；由引理四，HTML 结构、语义文本、自然换行和脚本锚点保持；由引理五，实际发布副本一致。合取引入得出定理。
+实现只替换两处 `src="assets/snapshot*.jpg"` 的值，未改变 HTML 标签数量、属性集合、脚本标签、
+样式引用或轮播控制。因而：
 
-剩余的实现义务是检验前提的实际实例化：
+\[
+\Delta(D,D')=\{src(q_L),src(q_D)\}
+\]
 
-1. 静态检查目标文本、规则数值、两份副本相等以及非目标节点存在；
-2. 运行 lint/build，证明源码可解析并生成部署产物；
-3. 启动本地开发服务器并以 HTTP 请求验证首页成功返回且含新文案；
-4. 若任何判定失败，按模型状态机回退到对应设计或实现步骤。
+除验证文档和为保持发布副本一致的同一对替换外，没有无关源码差异，`P_scope` 成立。由于
+`src` 仍是 `<img>` 的属性而非 CSS 伪元素内容，辅助技术可继续从 DOM 读取原有 `alt` 文本。
+
+## 7. 路径解析前提的边界
+
+[WHATWG HTML 图像算法](https://html.spec.whatwg.org/multipage/images.html#updating-the-image-data)
+要求把 `src` 相对文档 URL 解析后发起图像请求；[MDN URL 说明](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL#absolute_urls_vs_relative_urls)
+说明 `/Users/...` 在 HTTP 文档中表示当前 origin 的根路径下的 URL。故本证明保证的是用户指定的
+精确属性值及其本地文件有效性，不额外声称任意 HTTP 服务器会把宿主机 `/Users/inostarlin/Downloads`
+映射为可请求目录。若部署需求后来变为“通过 HTTP 也必须加载该本地文件”，那是新的服务器/资源
+托管约束，需要另行选择复制资源或配置映射，不能由本次 HTML 字符串替换推出。
+
+## 8. 结论与可执行验证义务
+
+引理一至五分别推出路径精确性、AVIF 资源合法性、轮播行为、镜像一致性和变更范围；合取得出
+`P_exact ∧ P_avif ∧ P_structure ∧ P_behavior ∧ P_mirror ∧ P_scope`。最后运行静态分析、构建和
+HTTP 检查：若全部通过，`P_build` 成立，定理完成；若任一失败，按模型状态机回退到对应步骤。

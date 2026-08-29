@@ -1,146 +1,140 @@
-# Fovelle 首页文案与字号调整的数学模型
+# 截图资源替换的数学模型
 
-## 1. 范围与已确证前提
+## 1. 范围与确证前提
 
-本任务只处理首页 hero 区域的三项可观察属性：说明文案、系统要求行和语言支持行。仓库中存在两份字节级相同的静态首页：根目录的 `index.html` 和部署用的 `public/index.html`；两份页面都引用对应位置的 `styles.css`，且根目录与 `public/` 中的样式表在修改前相同。因此，为保证开发源文件和部署产物一致，将两份副本作为同一逻辑页面的两个表示同步修改。
+本任务只改变首页截图轮播中两张截图的 `img[src]` 属性：浅色模式对应
+`data-slide="0"`，深色模式对应 `data-slide="1"`。页面的文案、样式、脚本、轮播控制和
+可访问性文本不属于变更范围。
 
-本地检查得到以下初始事实：
+本地检查得到以下事实：
 
-1. `.hero-copy` 恰有一个段落，文本以 `Fovelle is a lightweight image viewer` 开头。
-2. 下载区恰有两个 `p.system-note`：`Requires macOS 15.0 or later` 和 `Available in...` 语言支持行。
-3. 两个系统说明通过 `.system-note` 选择器继承同一个 `font-size: 0.71rem`；`.download-status` 也共享该选择器组，但不是本任务的目标。
-4. `.system-note` 没有固定高度，语言行允许自然换行；因此增大字号可能改变换行，但不应通过裁剪文本来满足需求。
+1. 根目录 `index.html` 有且只有一个 `[data-carousel]` 轮播容器。
+2. 该容器有且只有两个 `[data-slide]` 图：序号 `0` 的 `alt` 描述 light appearance，
+   序号 `1` 的 `alt` 描述 dark appearance。
+3. 根目录 `index.html` 与 `public/index.html` 修改前字节级相同；
+   `app/page.tsx` 将首页请求重定向到 `/index.html`，因此 `public/index.html` 是需要同步的
+   静态副本。
+4. `/Users/inostarlin/Downloads/1.avif` 和 `/Users/inostarlin/Downloads/2.avif` 均存在，且
+   `file` 将两者识别为 `ISO Media, AVIF Image`。
 
 联网多跳检索得到的外部前提：
 
-- Fovelle 的公开 GitHub 仓库 README 将其描述为面向 macOS 的轻量图像查看器，并列出 `macOS 15.0 or later` 的系统要求：[Fovelle README](https://github.com/inostarlin-passion/Fovelle#readme)。
-- 同一公开仓库包含 GPLv3 `LICENSE`；该许可证说明其授予运行、修改和传播软件的权利，并使用 “free software” 的术语：[Fovelle LICENSE](https://raw.githubusercontent.com/inostarlin-passion/Fovelle/main/LICENSE)。这支持在产品文案中称其为开源/自由软件。**“免费”作为本任务要求的产品文案断言处理，不把 GPL 的自由软件含义误当成价格保证。**
-- MDN 说明 `font-size` 的 `rem` 值相对于根 `html` 字号计算，并建议使用相对用户默认字号的值以提高可访问性：[MDN `font-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-size)。W3C WAI 的 C14 技术说明也把相对字号与用户缩放能力联系起来：[WAI C14](https://www.w3.org/WAI/WCAG21/Techniques/css/C14)。
-- HTML 标准把文本作为 phrasing content，并将段落作为文本运行组织单位：[WHATWG DOM — paragraphs](https://html.spec.whatwg.org/dev/dom.html#paragraphs)。因此保持文案位于原有 `<p>` 中，不以 CSS 生成文本。
+- [MDN：Image file type and format guide](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Image_types#avif_image)
+  将 AVIF 定义为用于图像内容的 AV1 Image File Format。
+- [MDN：`<img>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img)
+  说明 `<img>` 用于嵌入图像，并把 AVIF 列为可用图像格式。
+- [WHATWG HTML：images](https://html.spec.whatwg.org/multipage/images.html#updating-the-image-data)
+  规定 `src` 经过 URL 解析后作为图像请求的地址，且相对文档的 URL 解析。
+- [MDN：What is a URL?](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL#absolute_urls_vs_relative_urls)
+  说明以 `/` 开头的路径是相对于当前站点 origin 的根路径，而不是自动等价于 HTTP 服务端的
+  任意本地文件路径。
+
+因此，本次用户要求被形式化为“HTML 属性值必须精确等于给出的绝对路径字符串”。不把它改写为
+`file://` URL、不复制到仓库中的相对资源，也不额外改变服务器配置。若页面以 `file://` 文档打开，
+该字符串可解析到对应本地文件；若页面经 HTTP 提供，能否加载还取决于服务器是否把该路径暴露为
+同源根路径，这是部署层前提，不由字符串替换本身保证。
 
 ## 2. 对象、输入与输出
 
-把一个页面表示为
+将一个首页表示为
 
 \[
-D=(H,C,J,A,R)
+D=(H,J,C,A,R)
 \]
 
 其中：
 
 - `H` 是 HTML DOM 树；
-- `C` 是 CSS 规则集合及其选择器匹配关系；
-- `J` 是页面脚本及其加载行为；
-- `A` 是本地静态资源映射；
-- `R` 是浏览器根字号与视口等渲染环境。
+- `J` 是 `app.js` 及其轮播行为；
+- `C` 是 CSS 规则和布局；
+- `A` 是页面可引用的外部资源；
+- `R` 是文档 URL、浏览器和视口等运行环境。
 
 输入为
 
 \[
-I=(D_r,D_p,U)
+I=(D_r,D_p,u_L,u_D)
 \]
 
-其中 `D_r` 是根目录首页，`D_p` 是 `public/` 首页，`U` 是用户要求：
+其中 `D_r` 是根目录首页，`D_p` 是 `public/` 静态副本，且
 
-1. 两个指定系统说明行的字号适当增大；
-2. `.hero-copy` 在保持原有轻量图像查看器语义的同时，明确包含“开源”和“免费”；
-3. 不破坏页面结构、下载行为、轮播行为或响应式换行。
+\[
+u_L=\texttt{/Users/inostarlin/Downloads/1.avif},\qquad
+u_D=\texttt{/Users/inostarlin/Downloads/2.avif}
+\]
 
 输出为
 
 \[
-O=(D'_r,D'_p)
+O=(D'_r,D'_p,M,P)
 \]
 
-并要求根目录与 `public/` 副本保持字节级一致。
+其中 `M`、`P` 分别是本模型和证明文档；页面输出必须只对两个目标 `src` 做有界替换。
 
-## 3. 形式化目标谓词
+## 3. 目标节点和变换
 
-令 `class(v)` 表示元素节点 `v` 的 class 集合，`text(v)` 表示其后代文本串。定义目标集合：
-
-\[
-N(D)=\{v\mid v\text{ 是 }p\text{ 元素}\land\texttt{system-note}\in class(v)\}
-\]
-
-初始检查给出 `|N(D_r)|=|N(D_p)|=2`。令 `n_1` 为系统要求行，`n_2` 为语言支持行；按页面顺序：
+对页面表示 `D`，定义两个唯一目标节点：
 
 \[
-text(n_1)=\text{“Requires macOS 15.0 or later”}
+q_L(D)=\operatorname{唯一}\{v\mid v\text{ 是 }img\text{ 且其祖先 }figure
+\text{ 的 }data-slide=\texttt{"0"}\}
 \]
 
 \[
-text(n_2)\text{ 以“Available in”开头}
+q_D(D)=\operatorname{唯一}\{v\mid v\text{ 是 }img\text{ 且其祖先 }figure
+\text{ 的 }data-slide=\texttt{"1"}\}
 \]
 
-定义 hero 文案节点 `h`：
+定义确定性变换 `T`：
 
 \[
-h=\operatorname{唯一节点}\{v\mid \texttt{hero-copy}\in class(v)\}
+src_{T(D)}(q_L)=u_L,\qquad src_{T(D)}(q_D)=u_D
 \]
 
-定义文案谓词：
+并且对所有其他 DOM 节点、属性、脚本和样式保持不变。对两个镜像文件分别应用同一个 `T`：
 
 \[
-P_{copy}(D):=\texttt{open-source}\subseteq text(h)\land\texttt{free}\subseteq text(h)
+D'_r=T(D_r),\qquad D'_p=T(D_p)
 \]
 
-定义字号函数 `size_C(v,R)` 为在渲染环境 `R` 下由 CSS 级联得到的计算字号。令 `r` 为 `html` 的计算字号，旧规则与新规则分别为：
+## 4. 状态、行为与约束
+
+页面状态沿验证循环表示为：
 
 \[
-s_0=0.71r,\qquad s_1=0.80r
+S_0\xrightarrow{\text{建模}}S_1\xrightarrow{\text{证明}}S_2
+\xrightarrow{\text{实现}}S_3\xrightarrow{\text{验证}}S_4
 \]
 
-故
+- `S0`：两个目标节点仍引用旧的 `.jpg` 资源；
+- `S1`：本模型已写入 `reports/model.md`；
+- `S2`：证明已写入 `reports/proof.md`，且 `T` 被选定；
+- `S3`：两个首页副本已实施 `T`；
+- `S4`：静态检查、代码检查、构建和动态页面检查通过。
+
+轮播行为由 `app.js` 的索引 `k∈{0,1}` 表示：`setSlide(k)` 只切换对应
+`figure` 的 `is-active` 与 `aria-hidden`，不改写 `img[src]`。因此图像资源选择函数为：
 
 \[
-s_1>s_0,\qquad \frac{s_1}{s_0}=\frac{0.80}{0.71}\approx1.1268
+image(k,D)=
+\begin{cases}
+src(q_L(D)),&k=0\\
+src(q_D(D)),&k=1
+\end{cases}
 \]
 
-定义字号谓词：
+变换后的期望行为为 `image(0,D')=u_L`、`image(1,D')=u_D`。
 
-\[
-P_{size}(D',D):=\forall v\in N(D),\ size_{C'}(v,R)>size_C(v,R)
-\]
+验收约束如下：
 
-同时要求 `.download-status` 的字号保持原值，以避免共享选择器造成无关变化：
+1. `P_exact`：两个 `src` 属性分别精确等于 `u_L`、`u_D`。
+2. `P_avif`：两个目标路径存在，并且文件类型为 AVIF。
+3. `P_structure`：目标节点仍唯一，轮播仍有两张图，原有 `alt` 文本不变。
+4. `P_behavior`：轮播控制、键盘切换和 `aria-hidden` 逻辑的脚本入口仍存在且可解析。
+5. `P_mirror`：`D'_r` 与 `D'_p` 的 HTML 内容字节级一致。
+6. `P_scope`：除两个目标属性和两份验证文档外，不产生无关源码变化。
+7. `P_build`：项目 lint、构建及首页 HTTP 请求均成功；HTTP 检查只验证页面结构和属性值，
+   不把本地 Downloads 路径误判为服务器已暴露的资源。
 
-\[
-P_{scope}: size_{C'}(d,R)=size_C(d,R)
-\]
-
-其中 `d` 是 `.download-status` 唯一节点。
-
-## 4. 变换、状态与行为
-
-将一次确定性变换 `T` 定义为以下三个原子操作，并对根目录和 `public/` 副本分别执行相同操作：
-
-1. 在唯一 `h` 的文本节点中，将 “Fovelle is a lightweight image viewer designed...” 改为含有 `open-source` 与 `free` 的完整句子，保留其 `<p class="hero-copy">` 结构。
-2. 将共享字号规则拆为独立规则：`.download-status { font-size: 0.71rem; }` 与 `.system-note { font-size: 0.80rem; }`；保留 `.system-note` 原有 margin、颜色和选择器语义。
-3. 不改动其余 HTML 节点、脚本、资源引用、页面顺序和非目标 CSS 声明。
-
-页面状态用离散状态机表示：
-
-\[
-S_0\xrightarrow{\text{建模}}S_1\xrightarrow{\text{证明}}S_2\xrightarrow{\text{实现}}S_3\xrightarrow{\text{验证}}S_4
-\]
-
-- `S_0`：现有页面，`P_copy` 与 `P_size` 尚未满足；
-- `S_1`：模型和前提写入 `reports/model.md`；
-- `S_2`：证明写入 `reports/proof.md`，选定变换 `T`；
-- `S_3`：源文件已实施 `T`；
-- `S_4`：静态、构建、HTTP 动态检查均通过。
-
-若任一验证谓词失败，则按失败来源回退：文案失败回到 `S_2` 修正 `T`，级联/布局失败回到字号规则设计，镜像或构建失败回到实现步骤；未通过前不得宣称完成。
-
-## 5. 约束与验收性质
-
-输出必须满足：
-
-1. `P_copy(O)` 成立，且文案仍是一个语义 `<p>`，不使用 CSS `content` 伪造可见文字。
-2. `|N(D'_r)|=|N(D'_p)|=2`，并且每个节点字号从 `0.71rem` 提升到 `0.80rem`。
-3. `.download-status` 仍为 `0.71rem`；除目标文案、目标字号规则和必要的镜像同步外，不发生无关文件变化。
-4. `D'_r` 与 `D'_p` 的 HTML 内容相等，根目录与 `public/` 的 CSS 内容相等。
-5. HTML 能被构建工具解析，`app.js` 语法检查通过；下载链接初始化、轮播初始化和动态 changelog 初始化所需的节点继续存在。
-6. 在至少一个真实 HTTP 页面请求中，首页返回成功状态并包含新文案；构建产物生成成功。
-
-这些性质构成后续证明和代码验证的判定标准。
+任一性质失败时，依据失败对象回退：目标定位失败回到建模；替换/镜像失败回到实现；脚本、构建
+或动态检查失败回到实现和证明前提重新核对，未到 `S4` 不宣称完成。
