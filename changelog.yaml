@@ -1,4 +1,8 @@
 releases:
+  - version: "1.0.4"
+    date: "2026-08-29"
+    changes:
+      - "Reduced app startup and exit times. Compared with qView as the baseline, startup time decreased from 433.306 ms to 327.359 ms, a 24.45% reduction, while exit time decreased from 77.171 ms to 37.406 ms, a 51.53% reduction."
   - version: "1.0.3"
     date: "2026-08-29"
     changes:
