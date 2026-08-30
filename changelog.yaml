@@ -1,4 +1,8 @@
 releases:
+  - version: "1.0.5"
+    date: "2026-08-31"
+    changes:
+      - "Fixed ghosting when dragging EPS or SVG images."
   - version: "1.0.4"
     date: "2026-08-29"
     changes:
