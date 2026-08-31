@@ -3,6 +3,8 @@ releases:
     date: "2026-08-31"
     changes:
       - "Fixed ghosting when dragging EPS or SVG images."
+      - "Made the Settings window automatically resize to fit the content of each tab."
+      - "Fixed an issue where preloading might not be enabled correctly."
   - version: "1.0.4"
     date: "2026-08-29"
     changes:
