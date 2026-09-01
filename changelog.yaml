@@ -1,4 +1,15 @@
 releases:
+  - version: "1.1.0"
+    date: "2026-09-01"
+    changes:
+      - "Hide the right navigation button when there is no next image, and the left navigation button when there is no previous image."
+      - "Use locale-appropriate date and time formats for the “Modified” field in file information."
+      - "Remove the rubber-banding effect when dragging images."
+      - "Adjust keyboard shortcut settings."
+      - "Fix an issue where the top of the vertical scrollbar was obscured by the title bar."
+      - "Fix an issue where the horizontal and vertical scrollbars could not be scrolled all the way to the start or end."
+      - "Fix an issue where the image and scrollbar positions could shift when a horizontal scrollbar appeared after zooming in."
+      - "Fix an issue where scrolling to either end of the horizontal or vertical scrollbar could leave extra blank space in the viewport."
   - version: "1.0.5"
     date: "2026-08-31"
     changes:
