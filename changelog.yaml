@@ -1,4 +1,10 @@
 releases:
+  - version: "1.2.0"
+    date: "2026-09-04"
+    changes:
+      - "Zoom images around the cursor position."
+      - "Added a keyboard shortcut for “Toggle Fit and 100%”."
+      - "Removed the deprecated context menu."
   - version: "1.1.0"
     date: "2026-09-01"
     changes:
