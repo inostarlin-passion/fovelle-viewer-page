@@ -1,4 +1,9 @@
 releases:
+  - version: "1.2.2"
+    date: "2026-09-25"
+    changes:
+      - "Updated the app icon to align with the latest macOS app icon design guidelines."
+      - "Fixed an issue where a brief flicker could occasionally occur when entering or exiting full screen."
   - version: "1.2.1"
     date: "2026-09-05"
     changes:
