@@ -1,4 +1,9 @@
 releases:
+  - version: "1.2.3"
+    date: "2026-09-27"
+    changes:
+      - "Fixed an issue where the initial value in the “Set Zoom Level” input field did not match the current zoom level."
+      - "Fixed an issue where SVG and EPS images flickered when dragged."
   - version: "1.2.2"
     date: "2026-09-25"
     changes:
