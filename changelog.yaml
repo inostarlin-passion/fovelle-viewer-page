@@ -1,4 +1,11 @@
 releases:
+  - version: "1.2.4"
+    date: "2026-09-29"
+    changes:
+      - "Added feedback when navigation reaches a boundary."
+      - "Fixed an issue where images became blurred after the window lost focus."
+      - "Fixed an issue where images with transparent backgrounds could display background artifacts after the window lost focus."
+      - "Improved notification popup styling."
   - version: "1.2.3"
     date: "2026-09-27"
     changes:
