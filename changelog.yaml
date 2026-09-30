@@ -1,4 +1,8 @@
 releases:
+  - version: "1.2.5"
+    date: "2026-09-30"
+    changes:
+      - "Fixed an issue where the title bar would briefly reappear and compress the image in the viewport when entering fullscreen with the title bar hidden."
   - version: "1.2.4"
     date: "2026-09-29"
     changes:
