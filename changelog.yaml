@@ -1,4 +1,8 @@
 releases:
+  - version: "1.2.6"
+    date: "2026-10-01"
+    changes:
+      - "Fixed occasional frame drops when entering or exiting full-screen mode."
   - version: "1.2.5"
     date: "2026-09-30"
     changes:
