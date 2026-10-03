@@ -1,4 +1,10 @@
 releases:
+  - version: "1.2.7"
+    date: "2026-10-03"
+    changes:
+      - "Changed fullscreen mode to use the system's native behavior instead of custom animations."
+      - "Fixed an issue where the image size or position could jump when entering or exiting fullscreen mode."
+      - "Fixed an issue where HDR images could briefly fall back to SDR when entering or exiting fullscreen mode."
   - version: "1.2.6"
     date: "2026-10-01"
     changes:
