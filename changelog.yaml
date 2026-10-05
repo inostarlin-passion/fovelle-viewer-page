@@ -1,4 +1,8 @@
 releases:
+  - version: "1.2.8"
+    date: "2026-10-05"
+    changes:
+      - "Added support for downloading and installing new versions directly within the app."
   - version: "1.2.7"
     date: "2026-10-03"
     changes:
