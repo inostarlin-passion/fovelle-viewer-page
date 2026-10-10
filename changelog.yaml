@@ -1,4 +1,9 @@
 releases:
+  - version: "1.3.0"
+    date: "2026-10-10"
+    changes:
+      - "Added support for preserving the zoom level when switching between images."
+      - "Added source color space, ICC profile, and current output color space information to the File Info panel."
   - version: "1.2.9"
     date: "2026-10-08"
     changes:
