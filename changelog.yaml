@@ -1,4 +1,20 @@
 releases:
+  - version: "1.3.1"
+    date: "2026-10-17"
+    changes:
+      - "Fixed URL downloads losing animation, vector data, HDR gain maps, and RAW image information by preserving original file contents."
+      - "Fixed unsafe cross-thread access during downloads and improved cleanup after completion, failure, or cancellation."
+      - "Added streaming downloads with a 128 MiB size limit, a 15-second inactivity timeout, and a 120-second total timeout."
+      - "Moved directory scanning and sorting into background tasks to improve responsiveness when opening large folders."
+      - "Prevented outdated directory scan results from overriding newer navigation requests."
+      - "Moved animation playback decoding off the UI thread while preserving playback speed controls."
+      - "Added a 64 MiB animation cache budget while retaining backward frame navigation after cache eviction."
+      - "Improved animation error reporting and prevented outdated frames from appearing after source changes."
+      - "Removed blocking waits for image loading and vector refinement during window destruction, with bounded worker draining during application shutdown."
+      - "Added localized download error messages in Simplified Chinese, Traditional Chinese, Spanish, and Japanese."
+      - "Improved CI packaging with bundled dependency validation, signature renewal, and launch checks for extracted artifacts."
+      - "Added portable HDR and RAW regression fixtures, mandatory checks that reject skipped tests, and retained CI execution evidence."
+      - "Expanded regression coverage for downloads, animation playback, directory navigation, shutdown behavior, and artifact delivery."
   - version: "1.3.0"
     date: "2026-10-10"
     changes:
