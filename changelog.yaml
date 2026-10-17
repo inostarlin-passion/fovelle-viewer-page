@@ -1,4 +1,14 @@
 releases:
+  - version: "1.3.2"
+    date: "2026-10-17"
+    changes:
+      - "Added camera model information to File Info, with an “Unknown” fallback and translations in Simplified Chinese, Traditional Chinese, Spanish, and Japanese."
+      - "Improved GIF and APNG pause/resume behavior by retaining the decoder and completed frames, avoiding unnecessary decoding and preserving frame order."
+      - "Corrected the output color space shown in File Info for HDR images when opening the panel temporarily deactivates the image window."
+      - "Fixed HDR presentation restoration after closing File Info, with safeguards against stealing focus from another window or application."
+      - "Preserved full HDR image data and content headroom in persistent rendering surfaces to prevent temporary display headroom changes from permanently reducing cached HDR content."
+      - "Fixed intermittent GitHub Actions failures caused by overly strict animation timing assertions, and added controlled queue-delay and overdue-timer regression tests."
+      - "Expanded regression coverage for camera metadata, HDR output reporting, focus restoration, persistent HDR surfaces, and animation playback lifecycle."
   - version: "1.3.1"
     date: "2026-10-17"
     changes:
