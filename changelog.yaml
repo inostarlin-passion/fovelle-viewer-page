@@ -1,4 +1,17 @@
 releases:
+  - version: "1.3.3"
+    date: "2026-10-19"
+    changes:
+      - "Improved color handling for high-bit-depth RGB, grayscale, and ICC-tagged CMYK images."
+      - "Added color-managed support for Display P3, sRGB, and linear-sRGB colors in SVG/SVGZ images, including UTF-16 documents."
+      - "Corrected BT.709 color handling for PGM/PPM images while preserving 16-bit precision."
+      - "Fixed TIFF and ICNS representation selection for consistent native display output."
+      - "Improved EPS rendering precision and clarified color-space information for images without embedded profiles."
+      - "Fixed stale static HDR image data being retained when switching to animated images."
+      - "Improved EPS/SVG zooming and panning responsiveness by moving color conversion to background workers and removing display-profile queries from the paint path."
+      - "Prevented outdated vector color conversions after moving windows between displays with different color profiles."
+      - "Improved CI performance measurements using thread CPU time while retaining wall-clock diagnostics."
+      - "Stabilized RAW/HDR readiness and animation-speed tests, with additional delayed-execution and regression coverage."
   - version: "1.3.2"
     date: "2026-10-17"
     changes:
