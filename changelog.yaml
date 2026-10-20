@@ -1,4 +1,15 @@
 releases:
+  - version: "1.3.4"
+    date: "2026-10-21"
+    changes:
+      - "Fixed menu labels, icons, and checkmarks becoming inconsistent with fullscreen, titlebar visibility, animation playback, slideshow, and Always on Top states when menus are created later."
+      - "Fixed startup menu timing by initializing window menus before display and avoiding duplicate application menu construction."
+      - "Removed blocking Open With worker waits during window teardown, using managed background tasks with bounded application shutdown instead."
+      - "Reduced unnecessary native window layout work during startup and closing."
+      - "Streamlined regression testing by reducing repeated decoding, parallelizing source-only checks, and isolating HDR fixtures from adjacent RAW preloading."
+      - "Added regression coverage for menu synchronization, startup ordering, and shutdown behavior."
+      - "Consolidated CI jobs, pinned build tools and GitHub Actions revisions, added environment verification, and tightened workflow permissions."
+      - "Moved the main SDK 26 build to macOS 15 ARM64 runners and adjusted the desktop setup for fullscreen capture tests."
   - version: "1.3.3"
     date: "2026-10-19"
     changes:
