@@ -1,4 +1,12 @@
 releases:
+  - version: "1.3.6"
+    date: "2026-11-07"
+    changes:
+      - "Fixed Move to Trash and permanent deletion so the confirmation applies to the original file even if you switch images. If the file changes or is replaced before confirmation, Fovelle cancels the deletion."
+      - "Fixed Copy Image to use full-resolution pixels and preserve transparency. Animated images copy the current frame, HDR images copy an SDR rendition, and SVG and PDF images copy at their natural dimensions."
+      - "Fixed temporary files from image URL downloads accumulating during a session. Fovelle now removes each file once the viewer, clipboard, and background tasks are done using it."
+      - "Hardened EPS rendering by capping Ghostscript’s intermediate PDF at 256 MiB and stopping the renderer if its diagnostic output exceeds 64 KiB."
+      - "Added regression tests for deletion, clipboard fidelity, download cleanup, and EPS limits. Isolated download cleanup tests from unrelated background decoding."
   - version: "1.3.5"
     date: "2026-11-03"
     changes:
