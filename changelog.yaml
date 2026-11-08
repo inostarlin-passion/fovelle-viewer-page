@@ -1,4 +1,8 @@
 releases:
+  - version: "1.3.7"
+    date: "2026-11-09"
+    changes:
+      - "The floating Previous and Next buttons now use the same rounded gray design with dark arrows over both light and dark images, including HDR images."
   - version: "1.3.6"
     date: "2026-11-07"
     changes:
