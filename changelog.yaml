@@ -1,4 +1,9 @@
 releases:
+  - version: "1.4.2"
+    date: "2026-11-14"
+    changes:
+      - "Large TIFF previews. The thumbnail strip now displays previews for large 8-bit TIFF images, including CMYK scans that previously appeared as blank placeholders."
+      - "Fit to Window. Fixed a rounding issue that could make horizontal or vertical scrollbars appear when opening an image or switching back from 100% zoom to Fit to Window."
   - version: "1.4.1"
     date: "2026-11-14"
     changes:
