@@ -2,6 +2,13 @@ releases:
   - version: "1.3.7"
     date: "2026-11-09"
     changes:
+      - "New thumbnail strip. Move the pointer to the bottom of the image area, scroll or swipe to browse the folder, and click a thumbnail to open it."
+      - "Keyboard navigation. Choose View → Focus Thumbnails, use the arrow keys to browse, and press Return or Space to open an image."
+      - "More thumbnail previews. Preview large WebP files, oversized PNGs, and long screenshots. RAW previews match the full image’s orientation."
+      - "Zoom stays put when you try to go past the first or last image in a folder."
+  - version: "1.3.7"
+    date: "2026-11-09"
+    changes:
       - "The floating Previous and Next buttons now use the same rounded gray design with dark arrows over both light and dark images, including HDR images."
   - version: "1.3.6"
     date: "2026-11-07"
