@@ -1,6 +1,10 @@
 releases:
-  - version: "1.3.7"
-    date: "2026-11-09"
+  - version: "1.4.1"
+    date: "2026-11-14"
+    changes:
+      - "Fixed keyboard navigation in the thumbnail strip. Pressing the Left or Right Arrow key at either visible edge now scrolls the strip and selects the next thumbnail in that direction. Press Enter or Space to open the selected image."
+  - version: "1.4.0"
+    date: "2026-11-14"
     changes:
       - "New thumbnail strip. Move the pointer to the bottom of the image area, scroll or swipe to browse the folder, and click a thumbnail to open it."
       - "Keyboard navigation. Choose View → Focus Thumbnails, use the arrow keys to browse, and press Return or Space to open an image."
